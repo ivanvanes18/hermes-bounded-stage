@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "routes": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "adapter": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "argv": {
+                    "items": {
+                      "maxLength": 2048,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 16,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "evidence_kind": {
+                    "enum": [
+                      "synthetic",
+                      "live"
+                    ]
+                  },
+                  "pins": {
+                    "additionalProperties": {
+                      "pattern": "^[0-9a-f]{64}$",
+                      "type": "string"
+                    },
+                    "maxProperties": 16,
+                    "minProperties": 1,
+                    "type": "object"
+                  },
+                  "protocol": {
+                    "const": "hermes-executor-v1"
+                  },
+                  "timeout_seconds": {
+                    "maximum": 120,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "protocol",
+                  "argv",
+                  "pins",
+                  "timeout_seconds",
+                  "evidence_kind"
+                ],
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "approval_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "effort": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fallback": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "harness": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "kind": {
+            "enum": [
+              "executor",
+              "deterministic",
+              "control"
+            ]
+          },
+          "max_complexity": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "max_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ]
+          },
+          "mode": {
+            "enum": [
+              "read_only",
+              "bounded_write",
+              "control"
+            ]
+          },
+          "model": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "required_runtime_proof": {
+            "items": {
+              "maxLength": 128,
+              "minLength": 1,
+              "type": "string"
+            },
+            "maxItems": 16,
+            "minItems": 0,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "roles": {
+            "items": {
+              "enum": [
+                "implement",
+                "verify",
+                "review",
+                "transform",
+                "analyze"
+              ]
+            },
+            "maxItems": 5,
+            "minItems": 0,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "route_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "type": "string"
+          },
+          "skill": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "enum": [
+              "disabled",
+              "unverified",
+              "approved-for-pilot",
+              "control-approved",
+              "deterministic-approved"
+            ]
+          },
+          "write_benchmark_sha256": {
+            "anyOf": [
+              {
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "route_id",
+          "kind",
+          "skill",
+          "harness",
+          "model",
+          "effort",
+          "mode",
+          "max_risk",
+          "max_complexity",
+          "roles",
+          "required_runtime_proof",
+          "fallback",
+          "status",
+          "approval_sha256",
+          "write_benchmark_sha256",
+          "adapter"
+        ],
+        "type": "object"
+      },
+      "maxItems": 32,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema_version",
+    "routes"
+  ],
+  "type": "object"
+}

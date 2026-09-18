@@ -1,0 +1,248 @@
+{
+  "routes": [
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": null,
+      "fallback": "owner",
+      "harness": null,
+      "kind": "deterministic",
+      "max_complexity": "low",
+      "max_risk": "low",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [],
+      "roles": [
+        "transform",
+        "verify"
+      ],
+      "route_id": "deterministic",
+      "skill": null,
+      "status": "deterministic-approved",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": "low",
+      "fallback": "owner",
+      "harness": "luna",
+      "kind": "executor",
+      "max_complexity": "medium",
+      "max_risk": "medium",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [
+        "harness",
+        "model",
+        "effort",
+        "session_id",
+        "permissions",
+        "packet_hash",
+        "nonce",
+        "exit_code"
+      ],
+      "roles": [
+        "implement",
+        "review"
+      ],
+      "route_id": "luna_low",
+      "skill": "luna-task-routing",
+      "status": "unverified",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": "medium",
+      "fallback": "owner",
+      "harness": "luna",
+      "kind": "executor",
+      "max_complexity": "medium",
+      "max_risk": "medium",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [
+        "harness",
+        "model",
+        "effort",
+        "session_id",
+        "permissions",
+        "packet_hash",
+        "nonce",
+        "exit_code"
+      ],
+      "roles": [
+        "implement",
+        "review"
+      ],
+      "route_id": "luna_medium",
+      "skill": "luna-task-routing",
+      "status": "unverified",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": "max",
+      "fallback": "owner",
+      "harness": "luna",
+      "kind": "executor",
+      "max_complexity": "medium",
+      "max_risk": "medium",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [
+        "harness",
+        "model",
+        "effort",
+        "session_id",
+        "permissions",
+        "packet_hash",
+        "nonce",
+        "exit_code"
+      ],
+      "roles": [
+        "implement",
+        "review"
+      ],
+      "route_id": "luna_max",
+      "skill": "luna-task-routing",
+      "status": "unverified",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": "medium",
+      "fallback": "owner",
+      "harness": "claude",
+      "kind": "executor",
+      "max_complexity": "medium",
+      "max_risk": "medium",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [
+        "harness",
+        "model",
+        "effort",
+        "session_id",
+        "permissions",
+        "packet_hash",
+        "nonce",
+        "exit_code"
+      ],
+      "roles": [
+        "implement",
+        "review"
+      ],
+      "route_id": "claude_sonnet_medium",
+      "skill": "claude-code",
+      "status": "unverified",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": "high",
+      "fallback": "owner",
+      "harness": "claude",
+      "kind": "executor",
+      "max_complexity": "medium",
+      "max_risk": "medium",
+      "mode": "bounded_write",
+      "model": null,
+      "required_runtime_proof": [
+        "harness",
+        "model",
+        "effort",
+        "session_id",
+        "permissions",
+        "packet_hash",
+        "nonce",
+        "exit_code"
+      ],
+      "roles": [
+        "implement",
+        "review"
+      ],
+      "route_id": "claude_opus_high",
+      "skill": "claude-code",
+      "status": "unverified",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": null,
+      "fallback": null,
+      "harness": null,
+      "kind": "control",
+      "max_complexity": "high",
+      "max_risk": "high",
+      "mode": "control",
+      "model": null,
+      "required_runtime_proof": [],
+      "roles": [
+        "implement",
+        "verify",
+        "review",
+        "transform",
+        "analyze"
+      ],
+      "route_id": "owner",
+      "skill": null,
+      "status": "control-approved",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": null,
+      "fallback": null,
+      "harness": null,
+      "kind": "control",
+      "max_complexity": "high",
+      "max_risk": "high",
+      "mode": "control",
+      "model": null,
+      "required_runtime_proof": [],
+      "roles": [
+        "implement",
+        "verify",
+        "review",
+        "transform",
+        "analyze"
+      ],
+      "route_id": "clarify",
+      "skill": null,
+      "status": "control-approved",
+      "write_benchmark_sha256": null
+    },
+    {
+      "adapter": null,
+      "approval_sha256": null,
+      "effort": null,
+      "fallback": null,
+      "harness": null,
+      "kind": "control",
+      "max_complexity": "high",
+      "max_risk": "high",
+      "mode": "control",
+      "model": null,
+      "required_runtime_proof": [],
+      "roles": [
+        "implement",
+        "verify",
+        "review",
+        "transform",
+        "analyze"
+      ],
+      "route_id": "stop",
+      "skill": null,
+      "status": "control-approved",
+      "write_benchmark_sha256": null
+    }
+  ],
+  "schema_version": 1
+}
