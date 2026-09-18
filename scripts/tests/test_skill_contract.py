@@ -16,7 +16,7 @@ class SkillContractTests(unittest.TestCase):
         text = self.read("SKILL.md")
         self.assertTrue(text.startswith("---\n"))
         self.assertIn("name: hermes-bounded-stage", text)
-        self.assertIn("version: 1.2.0", text)
+        self.assertIn("version: 1.3.0", text)
         for heading in ("## When to Use", "## Procedure", "## Pitfalls", "## Verification"):
             self.assertIn(heading, text)
         description = re.search(r"(?m)^description: (.+)$", text).group(1)

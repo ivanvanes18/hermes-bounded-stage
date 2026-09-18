@@ -44,4 +44,4 @@ Set `TYPESAFE_API_KEY` locally only when explicitly using a network-backed Jev a
 
 ## Status
 
-The installed skill version is **1.2.0**. Real executor routes remain disabled until separately verified and authorized; installation alone does not enable external execution.
+The installed skill version is **1.3.0**. Real executor routes remain disabled until separately verified and authorized; installation alone does not enable external execution.

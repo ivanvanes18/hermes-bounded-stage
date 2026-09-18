@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hermes.local/schemas/loop-transition.schema.json",
+  "title": "One create-only hash-chained loop transition record",
+  "description": "The loop's authority. loop-state.json is a projection of this ledger and has none. A closed set of seven record kinds, capped at 32 records per loop.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","sequence","kind","previous_transition_hash","seal_hash",
+               "before_state_hash","after_state_hash","status","reason","iteration","evidence",
+               "jev_delta","recorded_at","parent_acceptance"],
+  "properties": {
+    "schema_version": {"const": 1, "type": "integer"},
+    "sequence": {"type": "integer", "minimum": 0, "maximum": 31},
+    "kind": {"enum": ["genesis","iteration_started","iteration_recorded","interrupted",
+                      "checkpoint","redirect","accept"]},
+    "previous_transition_hash": {"$ref": "#/$defs/sha256_or_null"},
+    "seal_hash": {"$ref": "#/$defs/sha256"},
+    "before_state_hash": {"$ref": "#/$defs/sha256_or_null"},
+    "after_state_hash": {"$ref": "#/$defs/sha256"},
+    "status": {"type": "string", "minLength": 1, "maxLength": 64},
+    "reason": {"type": "string", "minLength": 1, "maxLength": 128},
+    "iteration": {"type": "integer", "minimum": 0, "maximum": 4},
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage_id","run_relative","result_hash","tree_hash","accepted",
+                   "receipt_hash","approval_hash","continuation_hash"],
+      "properties": {
+        "stage_id": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 128}, {"type": "null"}]},
+        "run_relative": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 2048}, {"type": "null"}]},
+        "result_hash": {"$ref": "#/$defs/sha256_or_null"},
+        "tree_hash": {"$ref": "#/$defs/sha256_or_null"},
+        "accepted": {"type": "boolean"},
+        "receipt_hash": {"$ref": "#/$defs/sha256_or_null"},
+        "approval_hash": {"$ref": "#/$defs/sha256_or_null"},
+        "continuation_hash": {"$ref": "#/$defs/sha256_or_null"}
+      }
+    },
+    "jev_delta": {
+      "type": "object", "additionalProperties": false,
+      "required": ["calls","input_tokens","output_tokens"],
+      "properties": {
+        "calls": {"type": "integer", "minimum": 0, "maximum": 1000000},
+        "input_tokens": {"type": "integer", "minimum": 0, "maximum": 1000000000},
+        "output_tokens": {"type": "integer", "minimum": 0, "maximum": 1000000000}
+      }
+    },
+    "recorded_at": {"type": "number", "minimum": 0},
+    "parent_acceptance": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha256_or_null": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]}
+  }
+}
