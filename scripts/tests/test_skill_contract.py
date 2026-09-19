@@ -16,7 +16,7 @@ class SkillContractTests(unittest.TestCase):
         text = self.read("SKILL.md")
         self.assertTrue(text.startswith("---\n"))
         self.assertIn("name: hermes-bounded-stage", text)
-        self.assertIn("version: 1.3.0", text)
+        self.assertIn("version: 1.4.0", text)
         for heading in ("## When to Use", "## Procedure", "## Pitfalls", "## Verification"):
             self.assertIn(heading, text)
         description = re.search(r"(?m)^description: (.+)$", text).group(1)
@@ -29,6 +29,27 @@ class SkillContractTests(unittest.TestCase):
         for link in links:
             if not link.startswith("https://"):
                 self.assertTrue((ROOT / link).is_file(), link)
+
+    def test_luna_adapter_reference_is_linked_and_bounded(self):
+        skill = self.read("SKILL.md")
+        self.assertIn("references/luna-adapter.md", skill)
+        text = self.read("references/luna-adapter.md")
+        for item in ("gpt-5.6-luna", "native_pins", "--probe-anchor", "sandbox_network_not_proven",
+                     "not per-turn execution telemetry", "hermes-executor-v1"):
+            self.assertIn(item, text)
+        # The honest boundary must be stated, not implied.
+        self.assertIn("не является песочницей", text)
+        self.assertIn("unverified", text)
+
+    def test_adapter_protocol_documents_native_pins_boundary(self):
+        text = self.read("references/adapter-protocol.md")
+        for item in ("native_pins", "codex-cli 0.153.4", "app-server"):
+            self.assertIn(item, text)
+
+    def test_verification_boundary_names_the_synthetic_limit(self):
+        text = self.read("references/verification.md")
+        for item in ("fake app-server", "assets/executor-routes.json", "Luna"):
+            self.assertIn(item, text)
 
     def test_no_false_runtime_or_acceptance_claim(self):
         text = self.read("SKILL.md")

@@ -27,6 +27,16 @@
                       "live"
                     ]
                   },
+                  "native_pins": {
+                    "items": {
+                      "maxLength": 2048,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "maxItems": 4,
+                    "type": "array",
+                    "uniqueItems": true
+                  },
                   "pins": {
                     "additionalProperties": {
                       "pattern": "^[0-9a-f]{64}$",
