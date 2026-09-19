@@ -43,7 +43,7 @@ class CLITests(unittest.TestCase):
         code,r=self.call('route-validate');self.assertEqual(code,2);self.assertEqual(r['status'],'blocked')
     def test_candidate_version(self):
         import bounded_runtime,install_skill
-        self.assertEqual(bounded_runtime.SKILL_VERSION,'1.3.0')
-        self.assertEqual(install_skill.VERSION,'1.3.0')
-        self.assertIn('version: 1.3.0',(SCRIPTS.parent/'SKILL.md').read_text())
+        self.assertEqual(bounded_runtime.SKILL_VERSION,'1.4.0')
+        self.assertEqual(install_skill.VERSION,'1.4.0')
+        self.assertIn('version: 1.4.0',(SCRIPTS.parent/'SKILL.md').read_text())
 if __name__=='__main__':unittest.main()

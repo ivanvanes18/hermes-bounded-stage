@@ -1,7 +1,7 @@
 ---
 name: hermes-bounded-stage
 description: Use when running bounded Hermes stages with Jev.
-version: 1.3.0
+version: 1.4.0
 platforms: [linux, macos]
 required_environment_variables:
   - name: TYPESAFE_API_KEY
@@ -28,6 +28,12 @@ metadata:
 ## Версия 1.3: ограниченный цикл
 
 Версия **1.3.0** добавляет только слой `loop-*`: цепочку ограниченных итераций по stage, которые родитель допустил заранее, с обязательной остановкой у родителя между итерациями и неизменяемым continuation при redirect. Jev не сочиняет stage — она выбирает один пункт закрытого меню или возвращает цикл родителю. Авторитет состояния — create-only ledger переходов, связанный хешами; `loop-state.json` лишь проекция, и правка одного этого файла отклоняется до любого действия. Контракт и CLI — в [bounded loop](references/bounded-loop.md). Внутри итерации ничего не меняется: это тот же `route-*` runtime. Реальные executor routes по-прежнему unverified и disabled, `ready_for_parent_review` и `loop_accepted` не являются оценкой качества результата.
+
+## Версия 1.4: адаптер Codex (Luna)
+
+Версия **1.4.0** добавляет первый **real-capable** адаптер `hermes-executor-v1` — [luna adapter](references/luna-adapter.md): закреплённый подпроцесс, который управляет установленным `codex app-server` по stdio JSON-RPC, выполняет ровно один ограниченный read-only turn на `gpt-5.6-luna` и возвращает наблюдённые identity / session / permissions / usage либо не возвращает ничего. Identity берётся из ответа сервера, а не из запроса: эхо запрошенной модели свидетельством не является. Схема реестра получает одно необязательное поле `native_pins`, позволяющее закрепить дополнительный нативный ELF (§ [adapter protocol](references/adapter-protocol.md)); все ранее существующие спецификации ведут себя побайтово так же.
+
+**Адаптер поставляется выключенным.** `assets/executor-routes.json` не изменён: все реальные executor routes остаются `unverified`, `adapter:null`, `model:null`, и ни один route в профиле по умолчанию не создаётся. Проверка — только синтетический fake app-server и офлайн-probe против поддельного исполняемого файла; **обращений к модели нет ни одного**. Закрепление покрывает ровно четыре непосредственно связанных объекта и не является рекурсивным утверждением об идентичности пакета Codex; `network:false` — разрешение инструментов worker, а не утверждение о транспорте. Границы — в [протоколе проверки](references/verification.md).
 
 Ниже в Procedure сохранён **legacy v1/v2** workflow с `delegate_task`. Не смешивай его state/карточки с новым executor envelope. Для нового маршрута `delegation.model` не перенастраивается: выбранный проверенный adapter запускает собственный harness; этот путь не использует глобальный model router.
 

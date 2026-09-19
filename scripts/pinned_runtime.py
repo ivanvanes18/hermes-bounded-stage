@@ -132,9 +132,14 @@ def bind_command(spec, cwd):
     if sys.platform != 'linux' or not hasattr(os, 'memfd_create'):
         raise ContractError('sealed_execution_unavailable')
     retained = {}; total = 0
+    # Optional, and already shape-checked by stage_contracts.validate_pins, which runs
+    # first on every path that reaches here. Declares ADDITIONAL native executables so
+    # the 256 MiB limit, the ELF check, the +x/no-setuid check and the 0500 snapshot
+    # mode apply to them as they do to argv[0]. Never inferred from file content.
+    native = set(spec.get('native_pins') or ())
     try:
         for path, expected in spec['pins'].items():
-            is_executable = path == spec['argv'][0]
+            is_executable = path == spec['argv'][0] or path in native
             limit = MAX_EXECUTABLE if is_executable else MAX_DOCUMENT
             with regular_fd(path, limit=limit, executable=is_executable) as (source, before):
                 total += before.st_size

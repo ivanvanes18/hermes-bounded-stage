@@ -95,7 +95,7 @@ def main(argv=None):
             if name=='loop-accept':cmd.add_argument('--approval',required=True)
         args=parser.parse_args(argv)
         if args.command=='route-doctor':
-            result={'status':'local_prerequisites_checked','candidate_version':'1.3.0','python':sys.version.split()[0],
+            result={'status':'local_prerequisites_checked','candidate_version':'1.4.0','python':sys.version.split()[0],
                     'python_supported':sys.version_info>=(3,13),'platform':sys.platform,
                     'executables_present':{n:shutil.which(n) is not None for n in ('hermes','claude','codex','git')},
                     'network_checked':False,'live_readiness_claim':False,'active_profile_changed':False}

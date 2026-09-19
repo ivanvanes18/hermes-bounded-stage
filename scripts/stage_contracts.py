@@ -61,11 +61,20 @@ def validate_pins(command,worker_root=None):
         raise ContractError('incomplete_command_pins')
     if Path(args[0]).name.lower() in ('sh','bash','zsh','fish','dash','cmd','powershell','pwsh') or '-c' in args:
         raise ContractError('shell_not_allowed')
+    # Optional. argv[0] is native by definition; native_pins names ADDITIONAL native
+    # executables only. `set(pins)==absolute` above already forces every entry to be an
+    # absolute argv item, so no membership test is needed and none is reachable.
+    native=command.get('native_pins') or []
+    if type(native) is not list or len(native)>4 or len(set(native))!=len(native):raise ContractError('native_pin_shape')
+    if not set(native)<=set(pins) or args[0] in native:raise ContractError('native_pin_not_pinned')
+    native=set(native)
     for path,expected in pins.items():
         p=no_links(path)
         if worker_root and p.is_relative_to(Path(worker_root)):
             raise ContractError('controller_code_worker_writable')
-        if pinned_hash(p,executable=(path==args[0]))!=expected:raise ContractError('command_pin_changed')
+        # The executable limit and the +x/no-setuid check must apply here too: this site
+        # runs before bind_command and would otherwise reject a native ELF as source_size.
+        if pinned_hash(p,executable=(path==args[0] or path in native))!=expected:raise ContractError('command_pin_changed')
 
 def _binding(item):
     raw=read_file(item['source_path'],256*1024)

@@ -39,9 +39,12 @@ Set `TYPESAFE_API_KEY` locally only when explicitly using a network-backed Jev a
 - Core workflow: [`SKILL.md`](SKILL.md)
 - Contract: [`references/contract.md`](references/contract.md)
 - Executor routing: [`references/executor-routing.md`](references/executor-routing.md)
+- Luna Codex adapter: [`references/luna-adapter.md`](references/luna-adapter.md)
 - Verification boundaries: [`references/verification.md`](references/verification.md)
 - Standalone examples: [`examples/README.md`](examples/README.md)
 
 ## Status
 
-The installed skill version is **1.3.0**. Real executor routes remain disabled until separately verified and authorized; installation alone does not enable external execution.
+The installed skill version is **1.4.0**. Real executor routes remain disabled until separately verified and authorized; installation alone does not enable external execution.
+
+1.4.0 adds the first real-capable `hermes-executor-v1` adapter (`scripts/luna_codex_adapter.py`, driving the installed `codex app-server`) and one optional `native_pins` field in the executor-registry schema. It ships **disabled**: `assets/executor-routes.json` is unchanged, every real executor route is still `unverified` with `adapter: null` and `model: null`, and no default-profile route is created. Verification is a synthetic fake app-server plus an offline probe against a fake executable; there is no live model call anywhere in this package. Pinning binds exactly the four directly declared objects and makes no recursive claim about the Codex npm distribution or its package closure.

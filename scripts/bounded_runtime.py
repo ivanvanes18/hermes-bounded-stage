@@ -24,7 +24,7 @@ from runtime_support import (MAX_FILE_BYTES, MAX_JSON_BYTES, MAX_TEXT_BYTES, Sta
                              sha256_file, under_run)
 
 TERMINAL = {"ready_for_parent_review", "needs_review"}
-SKILL_VERSION = "1.3.0"
+SKILL_VERSION = "1.4.0"
 # Fixed, domain-neutral options. Jev classifies correspondence only; coverage is composed here.
 FILTER_CRITERIA = {
     "exact": "The candidate states the same subject and scope as the item, with nothing material added or dropped.",

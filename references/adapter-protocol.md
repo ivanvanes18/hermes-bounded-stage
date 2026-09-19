@@ -56,3 +56,76 @@ After execution, pins are checked again as defense in depth. Replacement or
 in-place modification can therefore return command_pin_changed while the
 substituted bytes have never executed. The child environment allowlist and
 process-group termination behavior are preserved.
+
+
+## 1.4 addition: `native_pins`, and what pinning actually binds
+
+`adapter.native_pins` is an OPTIONAL array of at most four already-pinned absolute
+argv items, declaring ADDITIONAL native executables beyond `argv[0]`. It is an
+explicit declaration, never content sniffing, and it is honoured at BOTH enforcement
+sites, because `stage_contracts.validate_pins` runs first and drives
+`pinned_hash(..., executable=)`, while `pinned_runtime.bind_command` runs second and
+drives the snapshot mode and the ELF check. Changing one site alone leaves a large
+native ELF rejected as `source_size` before the other site is ever entered.
+
+Its validation matrix is exactly two reason codes. `native_pin_shape`: not a list,
+more than four entries, or duplicates. `native_pin_not_pinned`: an entry outside
+`pins`, or `argv[0]` named again. There is deliberately no `native_pin_not_in_argv`:
+the pre-existing `set(pins) == {absolute argv items}` check already forces every
+entry to be an absolute argv item, so a membership test would be unreachable.
+Absence, `null` and any falsy value collapse to the empty list, so every
+pre-existing adapter spec behaves byte-identically.
+
+Each declared object still gets the full treatment: SHA-256 pinned, `O_NOFOLLOW`
+opened per path component, `\x7fELF` checked, `+x`/no-setuid checked, capped at
+`MAX_EXECUTABLE` 256 MiB, copied into a sealed memfd (`SEAL|SHRINK|GROW|WRITE`),
+re-hashed after sealing, and mode `0500`. This widens "may be a 256 MiB sealed
+executable memfd" from 1 to at most 5 objects per command. It grants no new
+privilege: the adapter could already exec arbitrary bytes, and pinning makes those
+bytes MORE constrained than before.
+
+Cost, stated accurately. A large native pin is copied into a memfd and hashed four
+times per `run_command` — `validate_pins` at `harness_adapter.py:22`, `bind_command`'s
+copy-hash, `bind_command`'s sealed re-hash, and `validate_pins` again at
+`harness_adapter.py:60`. An attempt performs one probe `run_command` and one run
+`run_command`, so eight passes and two memfd copies per attempt. The first
+`validate_pins` runs before the timeout clock starts; the second and all of
+`bind_command` run inside the `timeout_seconds` window. Not optimised in this slice.
+
+**What pinning binds, and what it does not.** Pinning covers exactly the directly
+bound objects named in the spec and nothing transitively. The Python standard
+library, the dynamic loader, libc, `/proc`, the OS kernel, its sandboxing behaviour,
+the network path to any provider, and the entire npm distribution and package
+closure of any pinned tool — every file that the pinned ELF opens, maps, spawns or
+downloads at runtime — are trusted external prerequisites, NOT identity-verified.
+Pinning a native ELF proves which bytes execute as the entry point. It proves
+nothing about what those bytes then read or execute. No recursive package-identity
+claim is made or may be made.
+
+
+## Codex app-server (`codex-cli 0.153.4`)
+
+`scripts/luna_codex_adapter.py` is the first real-capable adapter. It drives the
+installed `codex app-server` over stdio newline-delimited JSON-RPC and uses exactly
+four client methods — `initialize`, `thread/start`, `turn/start`, `turn/interrupt` —
+plus the one client notification the frozen `ClientNotification` union contains,
+`initialized`, which is a mandatory part of the handshake on both the probe and the
+run path.
+
+Protocol shapes are frozen from the installed CLI with
+`codex app-server generate-json-schema --out <dir>`, which performs no model call.
+Three shapes matter and are easy to get wrong: `turn/started` and `turn/completed`
+carry the turn id at `params.turn.id` and have no `params.turnId` at all, while
+`thread/tokenUsage/updated` is the only turn-scoped notification that does carry
+`params.turnId`; reasoning effort is a `turn/start` parameter and a thread-level
+config value, not a `thread/start` parameter; and `ReadOnlySandboxPolicy` requires
+only `type`, so `networkAccess` may legitimately be absent on the wire.
+
+All ten `ServerRequest` methods are declined and fail the run closed. The probe
+issues `initialize` and `initialized` and nothing else. The full contract, the
+verification table, the failure codes and the offline/live boundary are in
+[luna adapter](luna-adapter.md).
+
+Headroom note: the installed Codex ELF occupies 96.4 % of `MAX_EXECUTABLE`. The next
+release will break pinning. Raising the cap is a separate reviewed change; this slice
+only guarantees that the failure is the legible `executable_size` at both sites.

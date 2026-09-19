@@ -13,7 +13,7 @@ import tempfile
 from runtime_support import read_regular, parse_json, StageError
 
 NAME = "hermes-bounded-stage"
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 
 class InstallError(Exception):
