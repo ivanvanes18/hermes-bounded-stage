@@ -1,7 +1,7 @@
 ---
 name: hermes-bounded-stage
 description: Use when running bounded Hermes stages with Jev.
-version: 1.2.0
+version: 1.3.0
 platforms: [linux, macos]
 required_environment_variables:
   - name: TYPESAFE_API_KEY
@@ -24,6 +24,10 @@ metadata:
 ## Версия 1.2: выбор протокола
 
 Версия **1.2.0 установлена как skill**, но установка сама по себе не активирует реальные executor routes. Новая ветка executor routing вызывается только через `route-*`; см. [новый контракт](references/executor-routing.md) и [adapter protocol](references/adapter-protocol.md). Domain/process bindings задаёт родитель; Shaw остаётся единственным process owner; worker получает только текущий stage. Реальные routes остаются unverified и disabled до отдельных evidence и разрешения.
+
+## Версия 1.3: ограниченный цикл
+
+Версия **1.3.0** добавляет только слой `loop-*`: цепочку ограниченных итераций по stage, которые родитель допустил заранее, с обязательной остановкой у родителя между итерациями и неизменяемым continuation при redirect. Jev не сочиняет stage — она выбирает один пункт закрытого меню или возвращает цикл родителю. Авторитет состояния — create-only ledger переходов, связанный хешами; `loop-state.json` лишь проекция, и правка одного этого файла отклоняется до любого действия. Контракт и CLI — в [bounded loop](references/bounded-loop.md). Внутри итерации ничего не меняется: это тот же `route-*` runtime. Реальные executor routes по-прежнему unverified и disabled, `ready_for_parent_review` и `loop_accepted` не являются оценкой качества результата.
 
 Ниже в Procedure сохранён **legacy v1/v2** workflow с `delegate_task`. Не смешивай его state/карточки с новым executor envelope. Для нового маршрута `delegation.model` не перенастраивается: выбранный проверенный adapter запускает собственный harness; этот путь не использует глобальный model router.
 

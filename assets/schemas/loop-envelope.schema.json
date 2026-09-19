@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hermes.local/schemas/loop-envelope.schema.json",
+  "title": "Parent-sealed bounded loop envelope",
+  "description": "A closed, ordered list of stages the parent has already admitted. Each item is validated in Python by stage_contracts.validate_stage; this subset of JSON Schema cannot reference another file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","loop_id","goal","workspace","max_iterations","max_seconds","parent_owned","stages"],
+  "properties": {
+    "schema_version": {"const": 1, "type": "integer"},
+    "loop_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "goal": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "workspace": {"type": "string", "minLength": 1, "maxLength": 2048},
+    "max_iterations": {"type": "integer", "minimum": 1, "maximum": 4},
+    "max_seconds": {"type": "integer", "minimum": 1, "maximum": 3600},
+    "parent_owned": {"const": true},
+    "stages": {"type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true,
+               "items": {"type": "object"}}
+  }
+}

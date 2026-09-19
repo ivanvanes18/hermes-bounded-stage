@@ -24,7 +24,7 @@ except ImportError:  # pragma: no cover - mirrors the other suites
     installer = None
 
 NAME = "hermes-bounded-stage"
-MANIFEST_VERSION = "1.2.0"   # what the shipped bundle declares
+MANIFEST_VERSION = "1.3.0"   # what the shipped bundle declares
 STALE_VERSION = "1.0.0"      # frontmatter left behind inside the same bundle
 
 
